@@ -7,7 +7,7 @@
 
 #define	TTY_BUF_SIZE (1024)
 
-#ifdef HW_CONSOLE_ON_UART
+#if (HW_CONSOLE_ON_UART == 1)
  	#define TTY_ON_UART
  	#define	TTY_UART_GETCHAR()   HW_TTY_UART_GETCHAR()
  	#define	TTY_UART_PUTCHAR(ch) HW_TTY_UART_PUTCHAR(ch)

@@ -5,6 +5,14 @@
 
 #define	HW_HSE_ENABLED 1 // HSE crystal 8MHz assembled 
 
+#define SYSCLK                  48000000
+#define HCLK                    SYSCLK
+#define PCLK1                   (HCLK/2)
+#define APB1CLK                 (PCLK1/1)
+#define TIM2CLK                 HCLK
+#define TIM3CLK                 HCLK
+#define UART1CLK                PCLK1
+
 #define HW_LED1_BIT   (9)
 #define HW_LED1_PORT  GPIOA
 #define HW_LED1_INIT  GPIO_PIN_INIT(HW_LED1_PORT, HW_LED1_BIT, GPIO_MODE_OUTPUT)
@@ -27,7 +35,7 @@
 #define	HW_UART1_TX_PORT GPIOA
 #define	HW_UART1_GPIO_EN RCC_AHB2ENR1_GPIOAEN
 
-#define HW_CONSOLE_ON_UART
+#define HW_CONSOLE_ON_UART  0 // enable/disable UART debug output
 #define	HW_TTY_UART_GETCHAR() uart1_getchar()
 #define	HW_TTY_UART_PUTCHAR(ch) uart1_putchar(ch)
 #define	HW_TTY_UART_INIT(baud) uart1_init(baud)
@@ -41,7 +49,7 @@
 #define HW_SPI_SW_CS_UP     GPIO_BIT_SET(HW_SPI_SW_CS_PORT,HW_SPI_SW_CS_BIT)
 #define HW_SPI_SW_CS_DOWN   GPIO_BIT_CLR(HW_SPI_SW_CS_PORT,HW_SPI_SW_CS_BIT)
 
-// output enable (level shifter enable)
+// output enable (level shifter enable) not present in this HW
 #define HW_SPI_OE_INIT      // GPIO_PIN_INIT(HW_SPI_OE_PORT,HW_SPI_OE_BIT,GPIO_MODE_OUTPUT)
 #define HW_SPI_OE_ENABLE    // GPIO_BIT_SET(HW_SPI_OE_PORT,HW_SPI_OE_BIT)
 #define HW_SPI_OE_DISABLE   // GPIO_BIT_CLR(HW_SPI_OE_PORT,HW_SPI_OE_BIT)

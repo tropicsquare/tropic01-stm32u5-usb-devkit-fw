@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    ux_device_cdc_acm.h
-  * @author  MCD Application Team
+  * @author  Tropicsquare
   * @brief   USBX Device CDC ACM interface header file
   ******************************************************************************
   */

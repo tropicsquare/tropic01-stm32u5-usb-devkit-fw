@@ -15,8 +15,6 @@
 
 LOG_DEF("main");
 
-#include "stm32u5xx_ll_utils.h"
-
 bool main_spi_auto = false;
 u8 main_spi_get_resp = 0;
 u8 main_spi_no_resp = 0;
@@ -42,27 +40,12 @@ static void main_gpio_init(void)
     MAIN_LED_INIT;
     MAIN_LED_ON;
 
-#ifdef HW_TS13
     HW_GPO_IN_INIT;
     HW_BUTTON_INIT;
     HW_CHIP_PWR_OFF;
     HW_CHIP_PWR_INIT;
-#else // HW_TS13
-    HW_SPI_OE_DISABLE;
     HW_SPI_OE_INIT;
 
-    HW_GPO0_IN_INIT;
-    HW_GPO1_IN_INIT;
-    HW_GPO2_IN_INIT;
-    HW_GPO3_IN_INIT;
-    HW_GPO4_IN_INIT;
-
-    HW_MODE0_IN_INIT;
-    HW_MODE1_IN_INIT;
-    HW_MODE2_IN_INIT;
-    HW_MODE3_IN_INIT;
-#endif // ! HW_TS13
-    
     // put USB to reset state
     GPIO_BIT_CLR(HW_USB_DP_PORT, HW_USB_DP_BIT);
     GPIO_PIN_INIT(HW_USB_DP_PORT, HW_USB_DP_BIT, GPIO_MODE_OUTPUT);
@@ -72,7 +55,7 @@ static void main_gpio_init(void)
 }
 
 void Error_Handler(void)
-{
+{   // Referenced from STM32 HAL library
     // User can add his own implementation to report the HAL error return state
     __disable_irq();
     while (1)
@@ -82,11 +65,6 @@ void Error_Handler(void)
         MAIN_LED_OFF;
         OS_DELAY(100);
     }
-}
-
-u32 HAL_GetTick(void)
-{
-	return (os_timer_get_time());
 }
 
 static bool _get_hex(u8 *dest, const char *src)
@@ -120,7 +98,7 @@ static void _spi_cs_disable(void)
 }
 
 static void _spi_auto_task(void)
-{   //
+{   // automatic response reading task
     char spi_buf[_SPI_BUF_SIZE];
     int i, l;
 
@@ -135,7 +113,7 @@ static void _spi_auto_task(void)
     if (spi_buf[0] == main_spi_no_resp)
     {   // no response to read
         _spi_cs_disable();
-        // TODO: automatic read MSG_HDR_DEBUG ?
+        // TODO: automatic read TS_L2_GET_LOG_REQ ?
         return;
     }
 
@@ -256,7 +234,6 @@ static void _usb_update_state(void)
 static void _main_task(void)
 {
     os_timer_t now, timer_100ms = 0;
-    os_timer_t timer_10s = 0;
 
     reset_clear();
     
@@ -269,7 +246,6 @@ static void _main_task(void)
     spi1_init();
 
     timer_100ms = timer_get_time();
-    timer_10s = timer_100ms;
 
     while (1)
     {
@@ -291,12 +267,7 @@ static void _main_task(void)
                 }
             }
         }
-        if (now > timer_10s)
-        {
-            timer_10s += 10*1000*TIMER_MS;
-            // 
-        }
-        // __WFI(); // at least 1ms timer IRQ running
+        __WFI(); // at least 1ms timer IRQ running
     }
 }
 

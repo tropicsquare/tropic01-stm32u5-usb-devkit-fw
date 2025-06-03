@@ -9,13 +9,6 @@
 #include "stm32u5xx_ll_bus.h"
 #include "stm32u5xx_ll_rcc.h"
 
-/*
-u32 uart_brr_value(u32 clk, u32 baudrate) // PCLK == 32M
-{   // return BRR register value for selected baudrate
-    return (__LL_USART_DIV_SAMPLING16(clk, LL_USART_PRESCALER_DIV1, baudrate));
-}
-*/
-
 typedef struct {
     char  *rx_buf;
     volatile u32   rx_wr_index;

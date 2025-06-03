@@ -83,11 +83,6 @@ void time_delay_ms(u32 tm)
     
     while ((timer_time_t)(timer_get_time() - time) < tm)
         ;
-
-/*  timer_time_t time = timer_get_time() + delay * TIMER_MS;
-
-    while (timer_get_time() < time)
-        ;*/
 }
 
 void time_delay_us (u32 tm)

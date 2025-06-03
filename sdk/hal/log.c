@@ -9,13 +9,13 @@ static int _log_level = LOG_LEVEL_OFF;
 
 static void _log_timestamp(void)
 {
-	u64 t = OS_TIMER()/OS_TIMER_MS;
-	printf("\r# %ld ",(u32)t);
+    u64 t = OS_TIMER()/OS_TIMER_MS;
+    printf("\r# %ld ",(u32)t);
 }
 
 void log_msg(int level, const ascii *id, const ascii *fmt, ... )
 {
-	va_list args;
+    va_list args;
 
     const ascii *type;
 
@@ -33,36 +33,36 @@ void log_msg(int level, const ascii *id, const ascii *fmt, ... )
         return;
     }
 
-	va_start(args, fmt);
+    va_start(args, fmt);
 
-	_log_timestamp();
-	printf("%s(%s): ", type, id);
-	vprintf(fmt, args);
-	va_end(args);
-	printf(NL);
+    _log_timestamp();
+    printf("%s(%s): ", type, id);
+    vprintf(fmt, args);
+    va_end(args);
+    printf(NL);
 
-	OS_FLUSH();
+    OS_FLUSH();
 }
 
 void log_dump(const ascii *id, u8 *data, int len)
 {
-#define	_MAX_DUMP_SIZE (256)
+#define _MAX_DUMP_SIZE (256)
 
-	int i;
-	char buf[2*_MAX_DUMP_SIZE + 1];
+    int i;
+    char buf[2*_MAX_DUMP_SIZE + 1];
 
-	if (len <= 1)
-		return;
+    if (len <= 1)
+        return;
 
-	if (len > _MAX_DUMP_SIZE)
-		len = _MAX_DUMP_SIZE;
+    if (len > _MAX_DUMP_SIZE)
+        len = _MAX_DUMP_SIZE;
 
-	for (i=0; i<len; i++)
-	{
-		sprintf(buf+2*i, "%02x", data[i]);
-	}
+    for (i=0; i<len; i++)
+    {
+        sprintf(buf+2*i, "%02x", data[i]);
+    }
 
-	log_msg(LOG_LEVEL_DEBUG, id, buf);
+    log_msg(LOG_LEVEL_DEBUG, id, buf);
 }
 
 void log_level_set(int level)

@@ -33,7 +33,6 @@ C_SOURCES +=  \
   $(DIR_DRV)/wd.c \
   $(DIR_DRV)/spi.c \
   \
-  $(DIR_COMMON)/buf.c \
   $(DIR_COMMON)/util.c \
   \
   $(DIR_USB)/ux_device_cdc_acm.c \

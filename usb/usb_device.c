@@ -1,3 +1,11 @@
+/**
+  ******************************************************************************
+  * @file    usb_device.c
+  * @author  Tropicsquare
+  * @brief   USB Device main API file
+  ******************************************************************************
+  */
+
 #include "usb_device.h"
 
 #include "main.h"

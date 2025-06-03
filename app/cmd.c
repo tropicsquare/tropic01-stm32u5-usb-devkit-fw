@@ -302,28 +302,9 @@ static bool _cmd_reset(const cmd_t *cmd)
 static bool _cmd_gpo(const cmd_t *cmd)
 {
     _cmd_basic_reply(cmd);
-#ifdef HW_TS13
     OS_PRINTF("%d" NL, _PIN_STATE(HW_GPO_IN));
-#else // HW_TS13
-    OS_PRINTF("%d,%d,%d,%d,%d" NL,
-            _PIN_STATE(HW_GPO0_IN), _PIN_STATE(HW_GPO1_IN),_PIN_STATE(HW_GPO2_IN),
-            _PIN_STATE(HW_GPO3_IN), _PIN_STATE(HW_GPO4_IN)
-    );
-#endif // ! HW_TS13
     return (true);
 }
-
-#ifndef HW_TS13
-static bool _cmd_mode(const cmd_t *cmd)
-{
-    _cmd_basic_reply(cmd);
-    OS_PRINTF("%d,%d,%d,%d" NL, 
-        _PIN_STATE(HW_MODE0_IN), _PIN_STATE(HW_MODE1_IN),_PIN_STATE(HW_MODE2_IN),
-        _PIN_STATE(HW_MODE3_IN)
-    );
-    return (true);
-}
-#endif // ! HW_TS13
 
 static bool _cmd_pwr(const cmd_t *cmd)
 {
@@ -442,9 +423,6 @@ static const cmd_t _CMD_TABLE[] = {
     {"GPO",       _cmd_gpo,     NULL,           "Show GPO state"},
     {"HELP",      _cmd_help,    NULL,           "This help text"},
     {"ID",        _cmd_id,      NULL,           "Request product id"},
-#ifndef HW_TS13
-    {"MODE",      _cmd_mode,    NULL,           "Show MODE state"},
-#endif // ! HW_TS13
     {"PWR",       _cmd_pwr,     _cmd_pwr_set,   "Get/set target power"},
     {"RESET",     _cmd_reset,   NULL,           "Instant reset"},
     {"SN",        _cmd_sn,      NULL,           "Request product serial number"},

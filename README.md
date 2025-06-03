@@ -1,6 +1,7 @@
 # About
 
-USB to SPI master converter FW for PCB TS01xx.
+TROPIC01 minimal USB dev-kit firmware for MCU STM32U535.
+USB to SPI master converter for PCB TS13xx.
 
 USB-CDC class (`/dev/ttyACM*`).
 
@@ -17,7 +18,7 @@ Tools installation i.e.:
 apt install gcc-arm-none-eabi
 ```
 
-Flashing tools install:
+Debugging tools install (optional):
 
 ```
 apt install stlink-tools
@@ -25,17 +26,17 @@ apt install stlink-tools
 
 # Project structure
 
-Current setup for CPU STM32F103xB.
+Current setup for CPU STM32U535.
 
 ```
 ├── app                 # application main directory
 │   └── build           # application build directory
 ├── doc                 # device documentation
 ├── hw                  # hardware definitions
-└── sdk                 # submodule (sdk-stm32)
+├── usb                 # usb interface to usb library
+└── sdk                 # sdk root (stm32), may be submodule
     ├── common          # universal libraries
-    ├── doc             # stm32 documentation
-    ├── drv_f1          # stm32f1xx drivers
+    ├── drv_*           # stm32 drivers
     ├── hal             # HW abstraction layer (universal)
     └── stm32
         ├── CMSIS
@@ -43,7 +44,8 @@ Current setup for CPU STM32F103xB.
         │   ├── inc     # stm32 core definitions
         │   ├── linker  # linker files
         │   └── src     # stm32 core sources
-        └── STM32F1xx_HAL_Driver # submodule (STMicroelectronics)
+        ├── STM32_USBX_Library   # MS Azure USBX library provided by STM
+        └── STM32U5xx_HAL_Driver # submodule (STMicroelectronics)
 ```
 
 Project uses nested git submodules. Use `git submodule update --init --recursive`.
@@ -54,7 +56,12 @@ Build:
 
 ```
 $ cd ./app
+$ make clean
 $ make
+```
+
+Optional flashing using ST-Link
+```
 $ make flash
 ```
 
@@ -62,7 +69,7 @@ $ make flash
 
 Create USB character device /dev/ttyACMx. 
 
-USB identification (see `./usb/usbd_desc.c`):
+USB identification (see `./usb/ux_device_descriptors.h`):
 ```
 USBD_VID                 =  1155 == 0x0483 == "STMicroelectronics"
 USBD_PID_FS              = 22336 == 0x5740 == "Virtual COM Port"
@@ -96,13 +103,11 @@ Example SPI communication with TROPIC01 :
     `<no_resp>` : HEX value of byte which mean no response available
 * `CLKDIV` : Show SCK clock divisor current value.
 * `CLKDIV=<n>` : SCK clock divisor set \
-    `<n>` : 2,4,8,16,32,64,128 or 256 to select SCK frequency as `72MHz / <n>`
+    `<n>` : 2,4,8,16,32,64,128 or 256 to select SCK frequency as `48MHz / <n>`
 * `CS` : Show SPI CS state (1 == active == LOW) 
 * `CS=<n>` : Set SPI CS state (0 == idle, 1 == active == LOW) 
 * `GPO` : Show GPO state 
 * `ID` : Request product id
-* `MODE` : Show MODE state (`TEST_MODE`,`SCAN_MODE`,`FTEST_MODE`,`SEL_EXT_CLK`) \
-      Command supported only on TS01 HW
 * `PWR` : Show power status.
 * `PWR=<mode>` : Get/set target power \
     `<mode>` : 1 = power ON, 0 = power OFF
@@ -127,15 +132,16 @@ Possible error results `<reason>`:
 ## FW update
 
 This device may be updated without any special HW tool, just using USB. \
-You need utility `dfu-util` which can be installed on Debian-based distros: \
+You need utility `dfu-util` which can be installed on Debian-based distros:
 ```
 $ apt install dfu-util
 ```
 
 1) Build FW (see chapter [FW build](#fw-build))
 2) Press button and while pressed connect to USB
-   you will see connected USB device "STMicroelectronics STM Device in DFU Mode"
+   you can see connected USB device "STMicroelectronics STM Device in DFU Mode"
 3) run command `dfu-util` like that :
    `$ dfu-util -a 0 -s 0x08000000:leave -D build/app.bin`
-4) disconnect / connect USB again (without pressed button).
+4) after successful update the device starts FW automatically
+
 

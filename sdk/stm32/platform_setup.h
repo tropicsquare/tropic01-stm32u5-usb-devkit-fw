@@ -15,16 +15,10 @@
 
 #define PLATFORM_NAME        "STM32xx"
 
-#define	NL "\r\n"
+#define NL "\r\n"
 
 #define STRINGYFY(s) #s
 #define FILELINE(line) __FILE__ ":" STRINGYFY(line)
 #define ASSERT(p,msg) if(!(p)){ printf("ASSERT: " FILELINE(__LINE__) " " msg NL); while(1);}
-
-#define	RU16(data)          (*(data)+(*((data)+1)<<8))
-
-#ifndef NULL
-    #define NULL ((void *)0)
-#endif
 
 #endif //  PLATFORM_SETUP_H

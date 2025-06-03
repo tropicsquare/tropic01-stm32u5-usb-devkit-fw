@@ -1,3 +1,11 @@
+/**
+  ******************************************************************************
+  * @file    usb_device.h
+  * @author  Tropicsquare
+  * @brief   USB Device main API header
+  ******************************************************************************
+  */
+
 #ifndef USB_DEVICE_H
 #define USB_DEVICE_H
 

@@ -51,83 +51,6 @@ static void _spi1_pin_init(void)
     HW_SPI_SW_CS_UP;
 }
 
-static u32 _apb2_get_prescaler(void)
-{
-    switch (LL_RCC_GetAPB2Prescaler())
-    {
-    case LL_RCC_APB2_DIV_1: return(1);
-    case LL_RCC_APB2_DIV_2: return(2);
-    case LL_RCC_APB2_DIV_4: return(4);
-    case LL_RCC_APB2_DIV_8: return(8);
-    case LL_RCC_APB2_DIV_16: return(16);
-    default:
-        break;
-    }
-    return (1);
-}
-
-static void _apb2_set_prescaler(u32 div)
-{
-    switch (div)
-    {
-    case 1: LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1); return;
-    case 2: LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_2); return;
-    case 4: LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_4); return;
-    case 8: LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_8); return;
-    case 16: LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_16); return;
-    default:
-        break;
-    }
-}
-
-u32 spi1_get_frequency(void)
-{   // HCLK -> APB2 -> PCLK2
-    u32 clk = sys_get_hclk() / _apb2_get_prescaler();
-    return (clk / spi1_get_prescaler());
-}
-
-bool spi1_set_frequency(u32 freq)
-{
-    // setting exact SPI frequency is a little bit tricky
-    // For SPI we have only prescaler 'power of 2' so we have to change HCLK and APB2 prescaler
-    // it has impact to all HCLK timed peripheries ! 
-    // Luckily USB on L4P has its own 48MHz oscillator.
-#define FREQ_MIN (SYS_HCLK_MIN/PRESCALER_SPI_MAX/PRESCALER_APB2_MAX)
-
-    u32 prescaler = 2;
-
-    if (freq < FREQ_MIN)
-        return (false);
-
-    if (freq > SYS_HCLK_MAX/2)
-        return (false);
-
-    while ((freq * prescaler) < SYS_HCLK_MIN)
-        prescaler *= 2;
-
-    if (! sys_set_hclk(freq * prescaler))
-    {
-        // OS_PRINTF("err: F=%ld, D=%ld" NL, freq * prescaler, prescaler);
-        return (false);
-    }
-
-    if (prescaler > PRESCALER_SPI_MAX)
-    {
-        // OS_PRINTF("F=%ld, spi=%d, apb=%ld" NL, freq * prescaler, PRESCALER_SPI_MAX,  prescaler / PRESCALER_SPI_MAX);
-        spi1_set_prescaler(PRESCALER_SPI_MAX);
-        prescaler /= PRESCALER_SPI_MAX;
-        _apb2_set_prescaler(prescaler);
-    }   
-    else
-    {
-        // OS_PRINTF("F=%ld, spi=%ld, apb=%d" NL, freq * prescaler, prescaler,  1);
-        _apb2_set_prescaler(1);
-        spi1_set_prescaler(prescaler);
-    }
-
-    return (true);
-}
-
 u32 spi1_get_prescaler(void)
 {
     switch (SPI1->CFG1 & SPI_CFG1_MBR)
@@ -169,8 +92,6 @@ bool spi1_set_prescaler(u32 value)
 
 void spi1_init(void)
 {
-    // LL_SPI_InitTypeDef SPI_InitStruct = {0};
-
     SPI_AutonomousModeConfTypeDef HAL_SPI_AutonomousMode_Cfg_Struct = {0};
 
     hspi1.Instance = SPI1;
@@ -209,30 +130,6 @@ void spi1_init(void)
 
     dma_init_spi_rx();
     dma_init_spi_tx();
-
-    // SPI1 parameter configuration
-/*    SPI_InitStruct.TransferDirection = LL_SPI_FULL_DUPLEX;
-    SPI_InitStruct.Mode              = LL_SPI_MODE_MASTER;
-    SPI_InitStruct.DataWidth         = LL_SPI_DATAWIDTH_8BIT;
-    SPI_InitStruct.ClockPolarity     = LL_SPI_POLARITY_LOW;
-    SPI_InitStruct.ClockPhase        = LL_SPI_PHASE_1EDGE;
-    SPI_InitStruct.NSS               = LL_SPI_NSS_SOFT;
-    SPI_InitStruct.BaudRate          = LL_SPI_BAUDRATEPRESCALER_DIV16;
-    SPI_InitStruct.BitOrder          = LL_SPI_MSB_FIRST;
-    SPI_InitStruct.CRCCalculation    = LL_SPI_CRCCALCULATION_DISABLE;
-    SPI_InitStruct.CRCPoly           = 7;
-    LL_SPI_Init(SPI1, &SPI_InitStruct);
-
-    // dma_init_spi_rx();
-    // dma_init_spi_tx();
-
-    // enable SPI1
-    LL_SPI_Enable(SPI1);
-    LL_SPI_StartMasterTransfer(SPI1);
-
-    while ((SPI1->SR & SPI_SR_TXP) == 0)
-        ;
-*/
 }
 
 void spi1_data_transfer(u8 *rx, u8 *tx, size_t len)
