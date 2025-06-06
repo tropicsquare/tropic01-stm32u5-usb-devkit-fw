@@ -1,13 +1,18 @@
 # About
 
-TROPIC01 minimal USB dev-kit firmware for MCU STM32U535.
-USB to SPI master converter for PCB TS13xx.
+Tropic Square TROPIC01 minimal USB dev-kit firmware for MCU STM32U535.
+Main function is USB to SPI master converter.
+Designed for PCB TS13xx (first compatible version is TS1302), see HW repo ts13-dev-kit.git
+Connected device work as USB-CDC class (in Linux and Android it appears as `/dev/ttyACM*`).
 
-USB-CDC class (`/dev/ttyACM*`).
+# Usage
+
+For basic low-level test you may use any terminal application, see  chapter [Function](#Function).
+For real usage of TROPIC01 chip use [Libtropic library](https://github.com/tropicsquare/libtropic-util)
 
 # STM32 based firmware
 
-Minimal requirements:
+Minimal requirements for compilation:
 
  * linux compatible os
  * arm-none-eabi-gcc
@@ -67,7 +72,7 @@ $ make flash
 
 # Function
 
-Create USB character device /dev/ttyACMx. 
+In Linux compatible OS it works as USB character device /dev/ttyACMx. 
 
 USB identification (see `./usb/ux_device_descriptors.h`):
 ```
