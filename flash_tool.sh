@@ -1,4 +1,18 @@
 #!/bin/bash
+#
+# Script Name:    flash_tool.sh
+# Description:    Does automatic flashing and communication testing of TS13xx board.
+# Author:         Tropic Square
+# Date:           2025-06-10
+# Version:        1.0.0
+#
+# Usage:          Run script ./flash_tool.sh and then connect TS13xx device with pressed button and follow instructions.
+#
+# Notes:          Make sure no other /dev/ttyACM* devices connected to this computer.
+#
+# Dependencies:   coreutils usbutils dfu-util
+#
+# License:        BSD, see LICENSE.txt
 
 FIRMWARE="app/build/app.bin"
 ACM_DEVICE="/dev/ttyACM0"
@@ -60,7 +74,7 @@ fi
 while true; do
 
 	echo ""
-	echo "Waiting for DFU device ..."
+	echo "Waiting for DFU device (connect TS13xx board with pressed button) ..."
     
 	# Wait for DFU device to appear
     while ! lsusb | grep -i "STM.*DFU" >/dev/null; do

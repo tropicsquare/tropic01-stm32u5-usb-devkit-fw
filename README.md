@@ -55,9 +55,7 @@ Current setup for CPU STM32U535.
 
 Project uses nested git submodules. Use `git submodule update --init --recursive`.
 
-## Application
-
-Build:
+## FW build
 
 ```
 $ cd ./app
@@ -69,6 +67,8 @@ Optional flashing using ST-Link
 ```
 $ make flash
 ```
+
+How to flash the new FW without ST-link see chapter [FW update](#FW update).
 
 # Function
 
@@ -149,4 +149,14 @@ $ apt install dfu-util
    `$ dfu-util -a 0 -s 0x08000000:leave -D build/app.bin`
 4) after successful update the device starts FW automatically
 
+# Manufacturing 
 
+For manufacturing purposes there is `flash_tool.sh` script, which does 
+automatic flashing and communication testing.
+
+It requires some tools installed : 
+```
+apt install coreutils usbutils dfu-util
+```
+
+Prior to use, you have to build the FW ant then simply execute the script.
