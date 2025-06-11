@@ -119,6 +119,7 @@ while true; do
 	SN=$(echo -n "$RSP" | grep 'SN')
 	SN=$(clean "$SN")
 	echo -e "${YELLOW}Board $SN ${NC}"
+	read -t 0.1 -r RSP < $ACM_DEVICE # fetch and discard "OK" response
 
 	# send TS_L2_GET_INFO_REQ (see tropic01_l2_api.h)
 	echo "010202002b98" > $ACM_DEVICE &

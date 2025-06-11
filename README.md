@@ -103,8 +103,8 @@ Example SPI communication with TROPIC01 :
 * `HELP` : Print quick help
 * `AUTO` : Show automatic response reading status.
 * `AUTO=<mode>[,<get_resp>,<no_resp>]` : Automatic response reading set \
-    `<mode>` : 1 = enable, 0 = disable (default 0)
-    `<get_resp>` : HEX value of byte used for reading
+    `<mode>` : 1 = enable, 0 = disable (default 0) \
+    `<get_resp>` : HEX value of byte used for reading \
     `<no_resp>` : HEX value of byte which mean no response available
 * `CLKDIV` : Show SCK clock divisor current value.
 * `CLKDIV=<n>` : SCK clock divisor set \
@@ -159,4 +159,4 @@ It requires some tools installed :
 apt install coreutils usbutils dfu-util
 ```
 
-Prior to use, you have to build the FW ant then simply execute the script.
+Prior to use, you have to build the FW ant then simply execute the script and follow instructions.
