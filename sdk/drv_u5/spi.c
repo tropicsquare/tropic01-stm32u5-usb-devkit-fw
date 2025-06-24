@@ -47,6 +47,9 @@ static void _spi1_pin_init(void)
     GPIO_InitStruct.Alternate = LL_GPIO_AF_5;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    // switch ON pull-up on MISO to have defined state when sending request or SPI inactive
+    LL_GPIO_SetPinPull(GPIOA, LL_GPIO_PIN_6, LL_GPIO_PULL_UP);
+
     HW_SPI_SW_CS_INIT;
     HW_SPI_SW_CS_UP;
 }
