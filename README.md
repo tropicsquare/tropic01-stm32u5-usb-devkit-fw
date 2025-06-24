@@ -118,6 +118,7 @@ Example SPI communication with TROPIC01 :
     `<mode>` : 1 = enable, 0 = disable (default 0) \
     `<get_resp>` : HEX value of byte used for reading \
     `<no_resp>` : HEX value of byte which mean no response available
+* `BUTTON` : Get button state.
 * `CLKDIV` : Show SCK clock divisor current value.
 * `CLKDIV=<n>` : SCK clock divisor set \
     `<n>` : 2,4,8,16,32,64,128 or 256 to select SCK frequency as `48MHz / <n>`
@@ -146,6 +147,13 @@ Possible error results `<reason>`:
 * "unknown command"
 * "USB RX overflow !"
 
+## LED signalization
+
+ * LED OFF == no power
+ * LED ON == power OK and USB connection established correctly (ready to use)
+ * blinking regularly == power OK but USB not working properly
+ * short flashes during SPI transaction
+
 ## FW update
 
 This device may be updated without any special HW tool, just using USB. \
@@ -155,7 +163,7 @@ $ apt install dfu-util
 ```
 
 1) Build FW (see chapter [FW build](#fw-build))
-2) Press button and while pressed connect to USB
+2) Press button and while pressed connect to USB (then release)
    you can see connected USB device "STMicroelectronics STM Device in DFU Mode"
 3) run command `dfu-util` like that :
    `$ dfu-util -a 0 -s 0x08000000:leave -D build/app.bin`

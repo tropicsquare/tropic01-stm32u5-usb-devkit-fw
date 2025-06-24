@@ -40,7 +40,7 @@ parse_version() {
         s+=($byte)
     done
 
-	# get version from TS_L2_GET_INFO_REQ response
+    # get version from TS_L2_GET_INFO_REQ response
     local major=$((s[6]))
     local minor=$((s[5]))
     local patch=$((s[4]))
@@ -62,7 +62,7 @@ require_command lsusb
 require_command dfu-util
 
 if [ ! -e $FIRMWARE ]; then
-    err "Firmware $FIRMWARE not fonud, you need to compile it"
+    err "Firmware $FIRMWARE not found, you need to compile it"
     exit 1
 fi
 
@@ -73,15 +73,15 @@ fi
 
 while true; do
 
-	echo ""
-	echo "Waiting for DFU device (connect TS13xx board with pressed button) ..."
+    echo ""
+    echo "Waiting for DFU device (connect TS13xx board with pressed button) ..."
     
-	# Wait for DFU device to appear
+    # Wait for DFU device to appear
     while ! lsusb | grep -i "STM.*DFU" >/dev/null; do
         sleep 1
     done
 
-    echo "DFU device detected, flashing ... "
+    echo "DFU device detected, release button if still pressed, flashing ... "
 
     # Flash firmware using dfu-util
     FLASH_OUTPUT=$(dfu-util -a 0  -s 0x08000000:leave -D "$FIRMWARE" 2>&1)
@@ -108,34 +108,35 @@ while true; do
 
     if [ ! -e $ACM_DEVICE ]; then
         err "$ACM_DEVICE not found after flashing."
-		continue
-	fi
+        continue
+    fi
 
-	echo "Deviece found, testing ... "
-	stty -F $ACM_DEVICE 115200 time 5 cs8 -hupcl -icrnl -ixon -ixoff -isig -icanon -iexten -echo
-	
-	echo "SN" > $ACM_DEVICE &
-	read -t 0.1 -r RSP < $ACM_DEVICE
-	SN=$(echo -n "$RSP" | grep 'SN')
-	SN=$(clean "$SN")
-	echo -e "${YELLOW}Board $SN ${NC}"
-	read -t 0.1 -r RSP < $ACM_DEVICE # fetch and discard "OK" response
+    echo "Device found, testing ... "
+    sleep 1
+    stty -F $ACM_DEVICE 115200 time 5 cs8 -hupcl -icrnl -ixon -ixoff -isig -icanon -iexten -echo
 
-	# send TS_L2_GET_INFO_REQ (see tropic01_l2_api.h)
-	echo "010202002b98" > $ACM_DEVICE &
-	read -t 0.1 -r RSP < $ACM_DEVICE
-	RSP=$(clean "$RSP")
-	
-	if [[ "$RSP" == "01FFFFFFFFFF" ]]; then
-		echo -e "${GREEN}Request send OK ${NC}"
-		sleep 0.1
-		echo "aaffffffffffffffff" > $ACM_DEVICE &
-		read -t 0.1 -r RSP < $ACM_DEVICE
-		VER=$(clean "$RSP")
-		HVER=$(parse_version "$VER")
-		echo -e "${GREEN}Response: $VER == Chip version: ${YELLOW} $HVER ${NC}"
-	else
-		err "Unexpected chip response $RSP"
-	fi
+    echo "SN" > $ACM_DEVICE &
+    read -t 0.1 -r RSP < $ACM_DEVICE
+    SN=$(echo -n "$RSP" | grep 'SN')
+    SN=$(clean "$SN")
+    echo -e "${YELLOW}Board $SN ${NC}"
+    read -t 0.1 -r RSP < $ACM_DEVICE # fetch and discard "OK" response
+
+    # send TS_L2_GET_INFO_REQ (see tropic01_l2_api.h)
+    echo "010202002b98" > $ACM_DEVICE &
+    read -t 0.1 -r RSP < $ACM_DEVICE
+    RSP=$(clean "$RSP")
+
+    if [[ "$RSP" == "01FFFFFFFFFF" ]]; then
+        echo -e "${GREEN}Request send OK ${NC}"
+        sleep 0.1
+        echo "aaffffffffffffffff" > $ACM_DEVICE &
+        read -t 0.1 -r RSP < $ACM_DEVICE
+        VER=$(clean "$RSP")
+        HVER=$(parse_version "$VER")
+        echo -e "${GREEN}Response: $VER == Chip version: ${YELLOW} $HVER ${NC}"
+    else
+        err "Unexpected chip response $RSP"
+    fi
 done
 
