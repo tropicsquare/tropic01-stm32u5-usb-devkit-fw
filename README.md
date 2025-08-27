@@ -24,7 +24,7 @@ For basic low-level test open **any serial portapplication**, then follow instru
 
 For compilation you need to have:
 
- * linux compatible OS
+ * Linux compatible OS
  * `arm-none-eabi-gcc` (could be installed with `apt install gcc-arm-none-eabi`) 
  * `dfu-util` (could be installed with `apt install dfu-util`)
 
