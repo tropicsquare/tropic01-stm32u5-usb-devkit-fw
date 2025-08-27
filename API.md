@@ -1,6 +1,6 @@
 # API
 
-This file describes USB devkit's communication interface version 1.0.0 exposed over serial port.
+This file describes USB devkit's communication interface over serial port.
 
 # Communication
 

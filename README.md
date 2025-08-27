@@ -1,19 +1,19 @@
 # About
 
-This is a minimalistic USB firmware used by [USB devkit](https://github.com/tropicsquare/tropic01-stm32u5-usb-devkit-hw). It is based on the **STM32U535** microcontroller and its primary function is to act as a USB-to-SPI master converter (master then talks to TROPIC01's slave SPI interface).
+This is a minimalistic USB firmware used by TROPIC01's [USB devkit](https://github.com/tropicsquare/tropic01-stm32u5-usb-devkit-hw). It is based on the **STM32U535** microcontroller and its primary function is to act as a USB-to-SPI master converter (master then talks to TROPIC01's slave SPI interface).
 
 > [!WARNING]
 > This firmware only facilitates raw data transfer between the TROPIC01 and a host-side application.
 > Key handling and security must be managed by the host application.
 
 > [!TIP]
-> Although this firmware is minimalistic by design, the STM32U535 MCU offers significantly more capabilities (e.g., secure key storage).
+> Although this firmware is minimalistic by design, the **STM32U535** MCU offers significantly more capabilities (e.g., secure key storage).
 > Users are encouraged to develop custom firmware to leverage these features for enhanced functionality.
 
 
 # Usage
 
-For basic low-level test open **any serial portapplication**, then follow instruction described in [`API.md`](./API.md).
+For basic low-level test open **any serial port application**, then follow instruction described in [`API.md`](./API.md).
 
 > [!TIP]
 > To release the full potential of TROPIC01, we recommend to explore and evaluate examples using [libtropic-linux](https://github.com/tropicsquare/libtropic-linux) repository.
