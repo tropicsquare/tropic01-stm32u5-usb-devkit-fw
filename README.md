@@ -1,9 +1,6 @@
 # About
 
-This is the minimal USB firmware for (todo the Tropic Square TROPIC01 development kit), based on the **STM32U535** microcontroller.
-Its primary function is to act as a USB-to-SPI master converter, master then talks to TROPIC01's slave SPI interface.
-
-For hardware details, see the (todo ts13-dev-kit) hardware GIT repository.
+This is a minimalistic USB firmware used by [USB devkit](https://github.com/tropicsquare/tropic01-stm32u5-usb-devkit-hw). It is based on the **STM32U535** microcontroller and its primary function is to act as a USB-to-SPI master converter (master then talks to TROPIC01's slave SPI interface).
 
 > [!WARNING]
 > This firmware only facilitates raw data transfer between the TROPIC01 and a host-side application.
@@ -16,35 +13,21 @@ For hardware details, see the (todo ts13-dev-kit) hardware GIT repository.
 
 # Usage
 
-For basic low-level test open **any serial portapplication**, then follow instruction for particular API version in [`API/`](API/README.md) folder.
+For basic low-level test open **any serial portapplication**, then follow instruction described in [`API.md`](./API.md).
 
 > [!TIP]
-> To see the ful potential of TROPIC01, we recommend to explore and evaluate examples using [libtropic-linux](https://github.com/tropicsquare/libtropic-linux/todo) repository.
-> For bash users we provide also command line application [libtropic-util](https://github.com/tropicsquare/libtropic-util/todo).
-
-
-# API
-
-Various firmware tags might have various API, please follow description in [`API/`](API/README.md) folder.
+> To release the full potential of TROPIC01, we recommend to explore and evaluate examples using [libtropic-linux](https://github.com/tropicsquare/libtropic-linux) repository.
+> For bash users we provide also command line application [libtropic-util](https://github.com/tropicsquare/libtropic-util).
 
 
 # Updating devkit's firmware
 
-Minimal requirements for compilation:
+For compilation you need to have:
 
- * linux compatible os
- * arm-none-eabi-gcc toolchain
- * dfu-util tool
+ * linux compatible OS
+ * `arm-none-eabi-gcc` (could be installed with `apt install gcc-arm-none-eabi`) 
+ * `dfu-util` (could be installed with `apt install dfu-util`)
 
-Install toolchain:
-```
-apt install gcc-arm-none-eabi 
-```
-
-Install `dfu-util`, should be available in most Debian-based distributions:
-```
-$ apt install dfu-util
-```
 
 > [!IMPORTANT]
 > Do not forget to update submodules with `git submodule update --init --recursive`
@@ -86,7 +69,7 @@ Description of all folders:
     ├── hal             # HW abstraction layer (universal)
     └── stm32
         ├── CMSIS
-        │   ├── device  # MCU definitions 
+        │   ├── device  # MCU definitions
         │   ├── inc     # stm32 core definitions
         │   ├── linker  # linker files
         │   └── src     # stm32 core sources
@@ -107,12 +90,12 @@ USBD_MANUFACTURER_STRING = "TropicSquare"
 USBD_PRODUCT_STRING_FS   = "SPI interface"
 ```
 
-For manufacturing purposes there is `flash_tool.sh` script, which does 
+For manufacturing purposes there is `flash_tool.sh` script, which does
 automatic flashing and communication testing.
 
-It requires some tools installed : 
+It requires some tools installed :
 ```
 apt install coreutils usbutils dfu-util
 ```
 
-Prior to use, you have to build the FW ant then simply execute the script and follow instructions.
+Prior to use, you have to build the FW and then simply execute the script and follow instructions.
